@@ -1,0 +1,85 @@
+{
+  "from": "root.x",
+  "to": "Hips",
+  "next": [
+    {
+      "from": "thigh_stretch.l",
+      "to": "LeftUpperLeg",
+      "next": {
+        "from": "leg_stretch.l",
+        "to": "LeftLowerLeg",
+        "next": {
+          "from": "foot.l",
+          "to": "LeftFoot"
+        }
+      }
+    },
+    {
+      "from": "thigh_stretch.r",
+      "to": "RightUpperLeg",
+      "next": {
+        "from": "leg_stretch.r",
+        "to": "RightLowerLeg",
+        "next": {
+          "from": "foot.r",
+          "to": "RightFoot"
+        }
+      }
+    },
+    {
+      "from": "spine_01.x",
+      "to": "Spine",
+      "next": 
+      {
+        "from": "spine_02.x",
+        "to": "Chest",
+        "next": {
+          "from": "spine_03.x",
+          "to": "UpperChest",
+          "next": [
+            {
+              "from": "neck.x",
+              "to": "Neck",
+              "next": {
+                "from": "head.x",
+                "to": "Head"
+              }
+            },
+            {
+              "from": "shoulder.l",
+              "to": "LeftShoulder",
+              "next": {
+                "from": "arm_stretch.l",
+                "to": "LeftUpperArm",
+                "next": {
+                  "from": "forearm_stretch.l",
+                  "to": "LeftLowerArm",
+                  "next": {
+                    "from": "hand.l",
+                    "to": "LeftHand"
+                  }
+                }
+              }
+            },
+            {
+              "from": "shoulder.r",
+              "to": "RightShoulder",
+              "next": {
+                "from": "arm_stretch.r",
+                "to": "RightUpperArm",
+                "next": {
+                  "from": "forearm_stretch.r",
+                  "to": "RightLowerArm",
+                  "next": {
+                    "from": "hand.r",
+                    "to": "RightHand"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -46,7 +46,8 @@ namespace offline {
 class OzzImporter;
 OZZ_ANIMTOOLS_DLL bool ImportAnimations(const Json::Value& _config,
                                         OzzImporter* _importer,
-                      const ozz::Endianness _endianness);
+                                        const ozz::Endianness _endianness,
+                                        bool from_mapping);
 
 // Additive reference enum to config string conversions.
 struct AdditiveReferenceEnum {

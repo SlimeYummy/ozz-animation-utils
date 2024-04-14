@@ -1,0 +1,267 @@
+{
+    "from": "root.x",
+    "to": "hips",
+    "next": [
+      {
+        "from": "thigh_stretch.l",
+        "to": "leg1_l",
+        "next": {
+          "from": "leg_stretch.l",
+          "to": "leg2_l",
+          "next": {
+            "from": "foot.l",
+            "to": "foot_l",
+            "next": {
+              "from": "toes_01.l",
+              "to": "toes_l"
+            }
+          }
+        }
+      },
+      {
+        "from": "thigh_stretch.r",
+        "to": "leg1_r",
+        "next": {
+          "from": "leg_stretch.r",
+          "to": "leg2_r",
+          "next": {
+            "from": "foot.r",
+            "to": "foot_r",
+            "next": {
+              "from": "toes_01.r",
+              "to": "toes_r"
+            }
+          }
+        }
+      },
+      {
+        "from": "spine_01.x",
+        "to": "spine1",
+        "next": 
+        {
+          "from": "spine_02.x",
+          "to": "spine2",
+          "next": {
+            "from": "spine_03.x",
+            "to": "spine3",
+            "next": [
+              {
+                "from": "neck.x",
+                "to": "neck",
+                "next": {
+                  "from": "head.x",
+                  "to": "head",
+                  "next": [
+                    {
+                      "from": "J_Adj_L_FaceEye",
+                      "to": "eye_l",
+                      "optional": true
+                    },
+                    {
+                      "from": "J_Adj_R_FaceEye",
+                      "to": "eye_r",
+                      "optional": true
+                    },
+                    {
+                      "from": "jaw.x",
+                      "to": "jaw",
+                      "optional": true
+                    }
+                  ]
+                }
+              },
+              {
+                "from": "shoulder.l",
+                "to": "shoulder_l",
+                "next": {
+                  "from": "arm_stretch.l",
+                  "to": "arm1_l",
+                  "next": {
+                    "from": "forearm_stretch.l",
+                    "to": "arm2_l",
+                    "next": {
+                      "from": "hand.l",
+                      "to": "hand_l",
+                      "next": [
+                        {
+                          "from": "thumb1.l",
+                          "to": "thumb1_l",
+                          "next": {
+                            "from": "thumb2.l",
+                            "to": "thumb2_l",
+                            "next": {
+                              "from": "thumb3.l",
+                              "to": "thumb3_l"
+                            }
+                          }
+                        },
+                        {
+                          "from": "index1_base.l",
+                          "to": "index1_l",
+                          "next": {
+                            "from": "index1.l",
+                            "to": "index2_l",
+                            "next": {
+                              "from": "index2.l",
+                              "to": "index3_l",
+                              "next": {
+                                "from": "index3.l",
+                                "to": "index4_l"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "from": "middle1_base.l",
+                          "to": "middle1_l",
+                          "next": {
+                            "from": "middle1.l",
+                            "to": "middle2_l",
+                            "next": {
+                              "from": "middle2.l",
+                              "to": "middle3_l",
+                              "next": {
+                                "from": "middle3.l",
+                                "to": "middle4_l"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "from": "ring1_base.l",
+                          "to": "ring1_l",
+                          "next": {
+                            "from": "ring1.l",
+                            "to": "ring2_l",
+                            "next": {
+                              "from": "ring2.l",
+                              "to": "ring3_l",
+                              "next": {
+                                "from": "ring3.l",
+                                "to": "ring4_l"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "from": "pinky1_base.l",
+                          "to": "pinky1_l",
+                          "next": {
+                            "from": "pinky1.l",
+                            "to": "pinky2_l",
+                            "next": {
+                              "from": "pinky2.l",
+                              "to": "pinky3_l",
+                              "next": {
+                                "from": "pinky3.l",
+                                "to": "pinky4_l"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "from": "shoulder.r",
+                "to": "shoulder_r",
+                "next": {
+                  "from": "arm_stretch.r",
+                  "to": "arm1_r",
+                  "next": {
+                    "from": "forearm_stretch.r",
+                    "to": "arm2_r",
+                    "next": {
+                      "from": "hand.r",
+                      "to": "hand_r",
+                      "next": [
+                        {
+                          "from": "thumb1.r",
+                          "to": "thumb1_r",
+                          "next": {
+                            "from": "thumb2.r",
+                            "to": "thumb2_r",
+                            "next": {
+                              "from": "thumb3.r",
+                              "to": "thumb3_r"
+                            }
+                          }
+                        },
+                        {
+                          "from": "index1_base.r",
+                          "to": "index1_r",
+                          "next": {
+                            "from": "index1.r",
+                            "to": "index2_r",
+                            "next": {
+                              "from": "index2.r",
+                              "to": "index3_r",
+                              "next": {
+                                "from": "index3.r",
+                                "to": "index4_r"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "from": "middle1_base.r",
+                          "to": "middle1_r",
+                          "next": {
+                            "from": "middle1.r",
+                            "to": "middle2_r",
+                            "next": {
+                              "from": "middle2.r",
+                              "to": "middle3_r",
+                              "next": {
+                                "from": "middle3.r",
+                                "to": "middle4_r"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "from": "ring1_base.r",
+                          "to": "ring1_r",
+                          "next": {
+                            "from": "ring1.r",
+                            "to": "ring2_r",
+                            "next": {
+                              "from": "ring2.r",
+                              "to": "ring3_r",
+                              "next": {
+                                "from": "ring3.r",
+                                "to": "ring4_r"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "from": "pinky1_base.r",
+                          "to": "pinky1_r",
+                          "next": {
+                            "from": "pinky1.r",
+                            "to": "pinky2_r",
+                            "next": {
+                              "from": "pinky2.r",
+                              "to": "pinky3_r",
+                              "next": {
+                                "from": "pinky3.r",
+                                "to": "pinky4_r"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+  

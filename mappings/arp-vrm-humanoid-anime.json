@@ -1,0 +1,266 @@
+{
+  "from": "root.x",
+  "to": "Hips",
+  "next": [
+    {
+      "from": "thigh_stretch.l",
+      "to": "LeftUpperLeg",
+      "next": {
+        "from": "leg_stretch.l",
+        "to": "LeftLowerLeg",
+        "next": {
+          "from": "foot.l",
+          "to": "LeftFoot",
+          "next": {
+            "from": "toes_01.l",
+            "to": "LeftToes"
+          }
+        }
+      }
+    },
+    {
+      "from": "thigh_stretch.r",
+      "to": "RightUpperLeg",
+      "next": {
+        "from": "leg_stretch.r",
+        "to": "RightLowerLeg",
+        "next": {
+          "from": "foot.r",
+          "to": "RightFoot",
+          "next": {
+            "from": "toes_01.r",
+            "to": "RightToes"
+          }
+        }
+      }
+    },
+    {
+      "from": "spine_01.x",
+      "to": "Spine",
+      "next": 
+      {
+        "from": "spine_02.x",
+        "to": "Chest",
+        "next": {
+          "from": "spine_03.x",
+          "to": "UpperChest",
+          "next": [
+            {
+              "from": "neck.x",
+              "to": "Neck",
+              "next": {
+                "from": "head.x",
+                "to": "Head",
+                "next": [
+                  {
+                    "from": "J_Adj_L_FaceEye",
+                    "to": "LeftEye",
+                    "optional": true
+                  },
+                  {
+                    "from": "J_Adj_R_FaceEye",
+                    "to": "RightEye",
+                    "optional": true
+                  },
+                  {
+                    "from": "jaw.x",
+                    "to": "Jaw",
+                    "optional": true
+                  }
+                ]
+              }
+            },
+            {
+              "from": "shoulder.l",
+              "to": "LeftShoulder",
+              "next": {
+                "from": "arm_stretch.l",
+                "to": "LeftUpperArm",
+                "next": {
+                  "from": "forearm_stretch.l",
+                  "to": "LeftLowerArm",
+                  "next": {
+                    "from": "hand.l",
+                    "to": "LeftHand",
+                    "next": [
+                      {
+                        "from": "thumb1.l",
+                        "to": "LeftThumbMetacarpal",
+                        "next": {
+                          "from": "thumb2.l",
+                          "to": "LeftThumbProximal",
+                          "next": {
+                            "from": "thumb3.l",
+                            "to": "LeftThumbDistal"
+                          }
+                        }
+                      },
+                      {
+                        "from": "index1_base.l",
+                        "to": "LeftIndexEmpty",
+                        "next": {
+                          "from": "index1.l",
+                          "to": "LeftIndexProximal",
+                          "next": {
+                            "from": "index2.l",
+                            "to": "LeftIndexIntermediate",
+                            "next": {
+                              "from": "index3.l",
+                              "to": "LeftIndexDistal"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "from": "middle1_base.l",
+                        "to": "LeftMiddleEmpty",
+                        "next": {
+                          "from": "middle1.l",
+                          "to": "LeftMiddleProximal",
+                          "next": {
+                            "from": "middle2.l",
+                            "to": "LeftMiddleIntermediate",
+                            "next": {
+                              "from": "middle3.l",
+                              "to": "LeftMiddleDistal"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "from": "ring1_base.l",
+                        "to": "LeftRingEmpty",
+                        "next": {
+                          "from": "ring1.l",
+                          "to": "LeftRingProximal",
+                          "next": {
+                            "from": "ring2.l",
+                            "to": "LeftRingIntermediate",
+                            "next": {
+                              "from": "ring3.l",
+                              "to": "LeftRingDistal"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "from": "pinky1_base.l",
+                        "to": "LeftLittleEmpty",
+                        "next": {
+                          "from": "pinky1.l",
+                          "to": "LeftLittleProximal",
+                          "next": {
+                            "from": "pinky2.l",
+                            "to": "LeftLittleIntermediate",
+                            "next": {
+                              "from": "pinky3.l",
+                              "to": "LeftLittleDistal"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "from": "shoulder.r",
+              "to": "RightShoulder",
+              "next": {
+                "from": "arm_stretch.r",
+                "to": "RightUpperArm",
+                "next": {
+                  "from": "forearm_stretch.r",
+                  "to": "RightLowerArm",
+                  "next": {
+                    "from": "hand.r",
+                    "to": "RightHand",
+                    "next": [
+                      {
+                        "from": "thumb1.r",
+                        "to": "RightThumbMetacarpal",
+                        "next": {
+                          "from": "thumb2.r",
+                          "to": "RightThumbProximal",
+                          "next": {
+                            "from": "thumb3.r",
+                            "to": "RightThumbDistal"
+                          }
+                        }
+                      },
+                      {
+                        "from": "index1_base.r",
+                        "to": "RightIndexEmpty",
+                        "next": {
+                          "from": "index1.r",
+                          "to": "RightIndexProximal",
+                          "next": {
+                            "from": "index2.r",
+                            "to": "RightIndexIntermediate",
+                            "next": {
+                              "from": "index3.r",
+                              "to": "RightIndexDistal"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "from": "middle1_base.r",
+                        "to": "RightMiddleEmpty",
+                        "next": {
+                          "from": "middle1.r",
+                          "to": "RightMiddleProximal",
+                          "next": {
+                            "from": "middle2.r",
+                            "to": "RightMiddleIntermediate",
+                            "next": {
+                              "from": "middle3.r",
+                              "to": "RightMiddleDistal"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "from": "ring1_base.r",
+                        "to": "RightRingEmpty",
+                        "next": {
+                          "from": "ring1.r",
+                          "to": "RightRingProximal",
+                          "next": {
+                            "from": "ring2.r",
+                            "to": "RightRingIntermediate",
+                            "next": {
+                              "from": "ring3.r",
+                              "to": "RightRingDistal"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "from": "pinky1_base.r",
+                        "to": "RightLittleEmpty",
+                        "next": {
+                          "from": "pinky1.r",
+                          "to": "RightLittleProximal",
+                          "next": {
+                            "from": "pinky2.r",
+                            "to": "RightLittleIntermediate",
+                            "next": {
+                              "from": "pinky3.r",
+                              "to": "RightLittleDistal"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

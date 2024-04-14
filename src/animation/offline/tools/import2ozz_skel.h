@@ -46,6 +46,11 @@ OZZ_ANIMTOOLS_DLL bool ImportSkeleton(const Json::Value& _config,
                                       OzzImporter* _importer,
                                       const ozz::Endianness _endianness);
 
+OZZ_ANIMTOOLS_DLL bool ImportClipSkeleton(const Json::Value& _config,
+                                          const Json::Value& _mapping,
+                                          OzzImporter* _importer,
+                                          const ozz::Endianness _endianness);
+
 }  // namespace offline
 }  // namespace animation
 }  // namespace ozz

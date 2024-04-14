@@ -32,6 +32,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 
 #include "animation/offline/tools/import2ozz_anim.h"
 #include "animation/offline/tools/import2ozz_config.h"
@@ -108,6 +109,25 @@ void InitializeLogLevel() {
   ozz::log::LogV() << "Verbose log level activated." << std::endl;
 }
 
+OZZ_OPTIONS_DECLARE_STRING(mapping_file,
+    "Specifies joints mapping file in json format.", "", false)
+
+bool LoadMapping(Json::Value* _mapping) {
+  if (OPTIONS_mapping_file.value()[0] == 0) {
+    *_mapping = Json::Value::null;
+    return true;
+  }
+
+  Json::Reader reader;
+  std::ifstream file(OPTIONS_mapping_file.value());
+  if (!reader.parse(file, *_mapping, true)) {
+    ozz::log::Err() << "Error while parsing mapping file: "
+                    << reader.getFormattedErrorMessages() << std::endl;
+    return false;
+  }
+  return true;
+}
+
 namespace ozz {
 namespace animation {
 namespace offline {
@@ -133,6 +153,12 @@ int OzzImporter::operator()(int _argc, const char** _argv) {
     return EXIT_FAILURE;
   }
 
+  Json::Value mapping = Json::Value::null;
+  if (!LoadMapping(&mapping)) {
+    // Specific error message are reported during mapping loading.
+    return EXIT_FAILURE;
+  }
+
   // Ensures file to import actually exist.
   if (!ozz::io::File::Exist(OPTIONS_file)) {
     ozz::log::Err() << "File \"" << OPTIONS_file << "\" doesn't exist."
@@ -149,12 +175,18 @@ int OzzImporter::operator()(int _argc, const char** _argv) {
   }
 
   // Handles skeleton import processing
-  if (!ImportSkeleton(config, this, endianness)) {
-    return EXIT_FAILURE;
+  if (mapping.isNull()) {
+    if (!ImportSkeleton(config, this, endianness)) {
+      return EXIT_FAILURE;
+    }
+  } else {
+    if (!ImportClipSkeleton(config, mapping, this, endianness)) {
+      return EXIT_FAILURE;
+    }
   }
 
   // Handles animations import processing
-  if (!ImportAnimations(config, this, endianness)) {
+  if (!ImportAnimations(config, this, endianness, !mapping.isNull())) {
     return EXIT_FAILURE;
   }
 

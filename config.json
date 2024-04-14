@@ -1,0 +1,14 @@
+{
+  "skeleton": {
+    "filename": "skeleton.ozz",
+    "import": {
+      "enable": true
+    }
+  },
+  "animations": [
+    {
+      "clip": "*",
+      "filename": "*.ozz"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+    "from": "root.x",
+    "to": "hips",
+    "next": [
+      {
+        "from": "thigh_stretch.l",
+        "to": "leg1_l",
+        "next": {
+          "from": "leg_stretch.l",
+          "to": "leg2_l",
+          "next": {
+            "from": "foot.l",
+            "to": "foot_l"
+          }
+        }
+      },
+      {
+        "from": "thigh_stretch.r",
+        "to": "leg1_r",
+        "next": {
+          "from": "leg_stretch.r",
+          "to": "leg2_r",
+          "next": {
+            "from": "foot.r",
+            "to": "foot_r"
+          }
+        }
+      },
+      {
+        "from": "spine_01.x",
+        "to": "spine1",
+        "next": 
+        {
+          "from": "spine_02.x",
+          "to": "spine2",
+          "next": {
+            "from": "spine_03.x",
+            "to": "spine3",
+            "next": [
+              {
+                "from": "neck.x",
+                "to": "neck",
+                "next": {
+                  "from": "head.x",
+                  "to": "head"
+                }
+              },
+              {
+                "from": "shoulder.l",
+                "to": "shoulder_l",
+                "next": {
+                  "from": "arm_stretch.l",
+                  "to": "arm1_l",
+                  "next": {
+                    "from": "forearm_stretch.l",
+                    "to": "arm2_l",
+                    "next": {
+                      "from": "hand.l",
+                      "to": "hand_l"
+                    }
+                  }
+                }
+              },
+              {
+                "from": "shoulder.r",
+                "to": "shoulder_r",
+                "next": {
+                  "from": "arm_stretch.r",
+                  "to": "arm1_r",
+                  "next": {
+                    "from": "forearm_stretch.r",
+                    "to": "arm2_r",
+                    "next": {
+                      "from": "hand.r",
+                      "to": "hand_r"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+  
