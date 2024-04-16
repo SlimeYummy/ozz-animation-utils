@@ -1,85 +1,90 @@
 {
-  "from": "root.x",
-  "to": "Hips",
-  "next": [
-    {
-      "from": "thigh_stretch.l",
-      "to": "LeftUpperLeg",
-      "next": {
-        "from": "leg_stretch.l",
-        "to": "LeftLowerLeg",
-        "next": {
-          "from": "foot.l",
-          "to": "LeftFoot"
-        }
-      }
-    },
-    {
-      "from": "thigh_stretch.r",
-      "to": "RightUpperLeg",
-      "next": {
-        "from": "leg_stretch.r",
-        "to": "RightLowerLeg",
-        "next": {
-          "from": "foot.r",
-          "to": "RightFoot"
-        }
-      }
-    },
-    {
-      "from": "spine_01.x",
-      "to": "Spine",
-      "next": 
+  "name": "root",
+  "skip": true,
+  "optional": true,
+  "next": {
+    "name": "root.x",
+    "rename": "hips",
+    "next": [
       {
-        "from": "spine_02.x",
-        "to": "Chest",
+        "name": "thigh_stretch.l",
+        "rename": "leg1_l",
         "next": {
-          "from": "spine_03.x",
-          "to": "UpperChest",
-          "next": [
-            {
-              "from": "neck.x",
-              "to": "Neck",
-              "next": {
-                "from": "head.x",
-                "to": "Head"
-              }
-            },
-            {
-              "from": "shoulder.l",
-              "to": "LeftShoulder",
-              "next": {
-                "from": "arm_stretch.l",
-                "to": "LeftUpperArm",
+          "name": "leg_stretch.l",
+          "rename": "leg2_l",
+          "next": {
+            "name": "foot.l",
+            "rename": "foot_l"
+          }
+        }
+      },
+      {
+        "name": "thigh_stretch.r",
+        "rename": "leg1_r",
+        "next": {
+          "name": "leg_stretch.r",
+          "rename": "leg2_r",
+          "next": {
+            "name": "foot.r",
+            "rename": "foot_r"
+          }
+        }
+      },
+      {
+        "name": "spine_01.x",
+        "rename": "spine1",
+        "next": 
+        {
+          "name": "spine_02.x",
+          "rename": "spine2",
+          "next": {
+            "name": "spine_03.x",
+            "rename": "spine3",
+            "next": [
+              {
+                "name": "neck.x",
+                "rename": "neck",
                 "next": {
-                  "from": "forearm_stretch.l",
-                  "to": "LeftLowerArm",
+                  "name": "head.x",
+                  "rename": "head"
+                }
+              },
+              {
+                "name": "shoulder.l",
+                "rename": "shoulder_l",
+                "next": {
+                  "name": "arm_stretch.l",
+                  "rename": "arm1_l",
                   "next": {
-                    "from": "hand.l",
-                    "to": "LeftHand"
+                    "name": "forearm_stretch.l",
+                    "rename": "arm2_l",
+                    "next": {
+                      "name": "hand.l",
+                      "rename": "hand_l"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "shoulder.r",
+                "rename": "shoulder_r",
+                "next": {
+                  "name": "arm_stretch.r",
+                  "rename": "arm1_r",
+                  "next": {
+                    "name": "forearm_stretch.r",
+                    "rename": "arm2_r",
+                    "next": {
+                      "name": "hand.r",
+                      "rename": "hand_r"
+                    }
                   }
                 }
               }
-            },
-            {
-              "from": "shoulder.r",
-              "to": "RightShoulder",
-              "next": {
-                "from": "arm_stretch.r",
-                "to": "RightUpperArm",
-                "next": {
-                  "from": "forearm_stretch.r",
-                  "to": "RightLowerArm",
-                  "next": {
-                    "from": "hand.r",
-                    "to": "RightHand"
-                  }
-                }
-              }
-            }
-          ]
+            ]
+          }
         }
       }
-    }
-  ]
+    ]
+  }
 }

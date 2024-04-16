@@ -115,48 +115,54 @@ bool ClipSkeleton(const Json::Value js_obj,
     return true;
 
   } else if (js_obj.isObject()) {
-    const Json::Value& js_from_name = js_obj["from"];
-    if (!js_from_name.isString()) {
-      ozz::log::Err() << "Json mapping (bad from)" << std::endl;
+    const Json::Value& js_name = js_obj["name"];
+    if (!js_name.isString()) {
+      ozz::log::Err() << "Json mapping (bad name)" << std::endl;
       return false;
     }
-    std::string from_name = js_from_name.asString();
+    std::string name = js_name.asString();
 
-    const Json::Value& js_to_name = js_obj["to"];
-    if (!js_to_name.isString()) {
-      ozz::log::Err() << "Json mapping (bad to)" << std::endl;
-      return false;
-    }
-    std::string to_name = js_to_name.asString();
+    const Json::Value& js_rename = js_obj["rename"];
+    std::string rename = js_rename.isString() ? js_rename.asString() : "";
+    const bool skip = js_obj["skip"].asBool();
+    const bool optional = js_obj["optional"].asBool();
 
     auto raw_it =
         std::find_if(_raw_children.begin(), _raw_children.end(),
-                     [&](auto it) { return it.name == from_name.c_str(); });
+                     [&](auto it) { return it.name == name.c_str(); });
     if (raw_it == _raw_children.end()) {
-      if (js_obj["optional"].asBool()) {
-        return true;
+      if (optional) {
+        return ClipSkeleton(js_obj["next"], _raw_children, _clipped_children,
+                            _renamed_children);
       } else {
-        ozz::log::Err() << "Json mapping (joint '" << from_name
-                        << "' not found)" << std::endl;
+        ozz::log::Err() << "Json mapping (joint '" << name << "' not found)"
+                        << std::endl;
         return false;
       }
-    }
 
-    ozz::animation::offline::RawSkeleton::Joint clipped_joint;
-    clipped_joint.name = raw_it->name;
-    clipped_joint.transform = raw_it->transform;
-
-    ozz::animation::offline::RawSkeleton::Joint renamed_joint;
-    renamed_joint.name = ozz::string(to_name.c_str());
-    renamed_joint.transform = raw_it->transform;
-
-    if (ClipSkeleton(js_obj["next"], raw_it->children,
-        &clipped_joint.children, &renamed_joint.children)) {
-      _clipped_children->push_back(clipped_joint);
-      _renamed_children->push_back(renamed_joint);
-      return true;
     } else {
-      return false;
+      if (skip) {
+        return ClipSkeleton(js_obj["next"], raw_it->children, _clipped_children,
+                            _renamed_children);
+      } else {
+        ozz::animation::offline::RawSkeleton::Joint clipped_joint;
+        clipped_joint.name = raw_it->name;
+        clipped_joint.transform = raw_it->transform;
+
+        ozz::animation::offline::RawSkeleton::Joint renamed_joint;
+        renamed_joint.name =
+            rename.empty() ? raw_it->name : ozz::string(rename.c_str());
+        renamed_joint.transform = raw_it->transform;
+
+        if (ClipSkeleton(js_obj["next"], raw_it->children,
+                         &clipped_joint.children, &renamed_joint.children)) {
+          _clipped_children->push_back(clipped_joint);
+          _renamed_children->push_back(renamed_joint);
+          return true;
+        } else {
+          return false;
+        }
+      }
     }
 
   } else if (js_obj.isArray()) {

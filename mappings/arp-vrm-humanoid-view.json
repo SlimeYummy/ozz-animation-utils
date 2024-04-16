@@ -1,0 +1,280 @@
+{
+  "name": "root",
+  "skip": true,
+  "optional": true,
+  "next": {
+    "name": "root.x",
+    "rename": "Hips",
+    "next": [
+      {
+        "name": "thigh_stretch.l",
+        "rename": "LeftUpperLeg",
+        "next": {
+          "name": "leg_stretch.l",
+          "rename": "LeftLowerLeg",
+          "next": {
+            "name": "foot.l",
+            "rename": "LeftFoot",
+            "next": {
+              "name": "toes_01.l",
+              "rename": "LeftToes"
+            }
+          }
+        }
+      },
+      {
+        "name": "thigh_stretch.r",
+        "rename": "RightUpperLeg",
+        "next": {
+          "name": "leg_stretch.r",
+          "rename": "RightLowerLeg",
+          "next": {
+            "name": "foot.r",
+            "rename": "RightFoot",
+            "next": {
+              "name": "toes_01.r",
+              "rename": "RightToes"
+            }
+          }
+        }
+      },
+      {
+        "name": "spine_01.x",
+        "rename": "Spine",
+        "next": 
+        {
+          "name": "spine_02.x",
+          "rename": "Chest",
+          "next": {
+            "name": "spine_03.x",
+            "rename": "UpperChest",
+            "next": [
+              {
+                "name": "neck.x",
+                "rename": "Neck",
+                "next": {
+                  "name": "head.x",
+                  "rename": "Head",
+                  "next": [
+                    {
+                      "name": "J_Adj_L_FaceEye",
+                      "rename": "LeftEye",
+                      "skip": true
+                    },
+                    {
+                      "name": "J_Adj_R_FaceEye",
+                      "rename": "RightEye",
+                      "skip": true
+                    },
+                    {
+                      "name": "jaw.x",
+                      "rename": "Jaw",
+                      "skip": true,
+                      "optional": true
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "shoulder.l",
+                "rename": "LeftShoulder",
+                "next": {
+                  "name": "arm_stretch.l",
+                  "rename": "LeftUpperArm",
+                  "next": {
+                    "name": "forearm_stretch.l",
+                    "rename": "LeftLowerArm",
+                    "next": {
+                      "name": "hand.l",
+                      "rename": "LeftHand",
+                      "next": [
+                        {
+                          "name": "c_thumb1.l",
+                          "rename": "LeftThumbMetacarpal",
+                          "next": {
+                            "name": "c_thumb2.l",
+                            "rename": "LeftThumbProximal",
+                            "next": {
+                              "name": "c_thumb3.l",
+                              "rename": "LeftThumbDistal"
+                            }
+                          }
+                        },
+                        {
+                          "name": "index1_base.l",
+                          "rename": "LeftIndexEmpty",
+                          "optional": true,
+                          "next": {
+                            "name": "c_index1.l",
+                            "rename": "LeftIndexProximal",
+                            "next": {
+                              "name": "c_index2.l",
+                              "rename": "LeftIndexIntermediate",
+                              "next": {
+                                "name": "c_index3.l",
+                                "rename": "LeftIndexDistal"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "name": "middle1_base.l",
+                          "rename": "LeftMiddleEmpty",
+                          "optional": true,
+                          "next": {
+                            "name": "c_middle1.l",
+                            "rename": "LeftMiddleProximal",
+                            "next": {
+                              "name": "c_middle2.l",
+                              "rename": "LeftMiddleIntermediate",
+                              "next": {
+                                "name": "c_middle3.l",
+                                "rename": "LeftMiddleDistal"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "name": "ring1_base.l",
+                          "rename": "LeftRingEmpty",
+                          "optional": true,
+                          "next": {
+                            "name": "c_ring1.l",
+                            "rename": "LeftRingProximal",
+                            "next": {
+                              "name": "c_ring2.l",
+                              "rename": "LeftRingIntermediate",
+                              "next": {
+                                "name": "c_ring3.l",
+                                "rename": "LeftRingDistal"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "name": "pinky1_base.l",
+                          "rename": "LeftLittleEmpty",
+                          "optional": true,
+                          "next": {
+                            "name": "c_pinky1.l",
+                            "rename": "LeftLittleProximal",
+                            "next": {
+                              "name": "c_pinky2.l",
+                              "rename": "LeftLittleIntermediate",
+                              "next": {
+                                "name": "c_pinky3.l",
+                                "rename": "LeftLittleDistal"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "name": "shoulder.r",
+                "rename": "RightShoulder",
+                "next": {
+                  "name": "arm_stretch.r",
+                  "rename": "RightUpperArm",
+                  "next": {
+                    "name": "forearm_stretch.r",
+                    "rename": "RightLowerArm",
+                    "next": {
+                      "name": "hand.r",
+                      "rename": "RightHand",
+                      "next": [
+                        {
+                          "name": "c_thumb1.r",
+                          "rename": "RightThumbMetacarpal",
+                          "next": {
+                            "name": "c_thumb2.r",
+                            "rename": "RightThumbProximal",
+                            "next": {
+                              "name": "c_thumb3.r",
+                              "rename": "RightThumbDistal"
+                            }
+                          }
+                        },
+                        {
+                          "name": "index1_base.r",
+                          "rename": "RightIndexEmpty",
+                          "optional": true,
+                          "next": {
+                            "name": "c_index1.r",
+                            "rename": "RightIndexProximal",
+                            "next": {
+                              "name": "c_index2.r",
+                              "rename": "RightIndexIntermediate",
+                              "next": {
+                                "name": "c_index3.r",
+                                "rename": "RightIndexDistal"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "name": "middle1_base.r",
+                          "rename": "RightMiddleEmpty",
+                          "optional": true,
+                          "next": {
+                            "name": "c_middle1.r",
+                            "rename": "RightMiddleProximal",
+                            "next": {
+                              "name": "c_middle2.r",
+                              "rename": "RightMiddleIntermediate",
+                              "next": {
+                                "name": "c_middle3.r",
+                                "rename": "RightMiddleDistal"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "name": "ring1_base.r",
+                          "rename": "RightRingEmpty",
+                          "optional": true,
+                          "next": {
+                            "name": "c_ring1.r",
+                            "rename": "RightRingProximal",
+                            "next": {
+                              "name": "c_ring2.r",
+                              "rename": "RightRingIntermediate",
+                              "next": {
+                                "name": "c_ring3.r",
+                                "rename": "RightRingDistal"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "name": "pinky1_base.r",
+                          "rename": "RightLittleEmpty",
+                          "optional": true,
+                          "next": {
+                            "name": "c_pinky1.r",
+                            "rename": "RightLittleProximal",
+                            "next": {
+                              "name": "c_pinky2.r",
+                              "rename": "RightLittleIntermediate",
+                              "next": {
+                                "name": "c_pinky3.r",
+                                "rename": "RightLittleDistal"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
