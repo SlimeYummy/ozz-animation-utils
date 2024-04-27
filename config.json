@@ -1,14 +1,25 @@
 {
   "skeleton": {
-    "filename": "skeleton.ozz",
     "import": {
       "enable": true
-    }
+    },
+    "filename": "girl_skeleton_raw.ozz",
+    "renamed_file": "girl_skeleton_view.ozz"
   },
   "animations": [
     {
+      "clip": "walk",
+      "filename": "girl_animation_view_walk.ozz",
+      "fixed_root": "z"
+    },
+    {
+      "clip": "run",
+      "filename": "girl_animation_view_run.ozz",
+      "fixed_root": "z"
+    },
+    {
       "clip": "*",
-      "filename": "*.ozz"
+      "filename": "girl_animation_view_*.ozz"
     }
   ]
 }

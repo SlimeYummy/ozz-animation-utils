@@ -31,6 +31,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <unordered_set>
 
 #include "animation/offline/tools/import2ozz_config.h"
 #include "animation/offline/tools/import2ozz_track.h"
@@ -410,6 +411,7 @@ bool ImportAnimations(const Json::Value& _config, OzzImporter* _importer,
 
   // Loop though all existing animations, and export those who match
   // configuration.
+  std::unordered_set<std::string> marks;
   for (Json::ArrayIndex i = 0; i < animations_config.size(); ++i) {
     const Json::Value& animation_config = animations_config[i];
     const char* clip_match = animation_config["clip"].asCString();
@@ -427,6 +429,12 @@ bool ImportAnimations(const Json::Value& _config, OzzImporter* _importer,
       if (!strmatch(animation_name, clip_match)) {
         continue;
       }
+      // Process every animation clip only once
+      if (marks.find(animation_name) != marks.end()) {
+        continue;
+      }
+      marks.insert(animation_name);
+
       ++num_not_clip_animation;
       const bool anisuccess = ProcessAnimation(*_importer, animation_name, *skeleton,
                                 animation_config, _endianness);
