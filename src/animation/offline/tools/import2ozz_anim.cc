@@ -164,6 +164,40 @@ bool Export(OzzImporter& _importer, const RawAnimation& _input_animation,
   // Raw animation to build and output. Initial setup is just a copy.
   RawAnimation raw_animation = _input_animation;
 
+  // Handle fixed root montion
+  if (_config["fixed_root"].isString()) {
+    std::string fixed_root = _config["fixed_root"].asString();
+    bool axis_x = false, axis_y = false, axis_z = false;
+    for (auto it = fixed_root.begin(); it != fixed_root.end(); ++it) {
+      if (*it == 'x' || *it == 'X') {
+        axis_x = true;
+      } else if (*it == 'y' || *it == 'Y') {
+        axis_y = true;
+      } else if (*it == 'z' || *it == 'Z') {
+        axis_z = true;
+      } else {
+        ozz::log::Err() << "Invalid fixed root axis value." << std::endl;
+        return false;
+      }
+    }
+
+    for (int i = 0; i < _skeleton.num_joints(); ++i) {
+      if (_skeleton.joint_parents()[i] == -1) {
+        for (int j = 0; j < raw_animation.tracks[i].translations.size(); ++j) {
+          if (axis_x) {
+            raw_animation.tracks[i].translations[j].value.x = 0.0;
+          }
+          if (axis_y) {
+            raw_animation.tracks[i].translations[j].value.y = 0.0;
+          }
+          if (axis_z) {
+            raw_animation.tracks[i].translations[j].value.z = 0.0;
+          }
+        }
+      }
+    }
+  }
+
   // Optimizes animation if option is enabled.
   // Must be done before converting to additive, to be sure hierarchy length is
   // valid when optimizing.
