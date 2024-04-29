@@ -342,7 +342,7 @@ AdditiveReference::EnumNames AdditiveReference::GetNames() {
 }
 
 bool ImportAnimations(const Json::Value& _config, OzzImporter* _importer,
-                      const ozz::Endianness _endianness) {
+                      const ozz::Endianness _endianness, bool from_mapping) {
   const Json::Value& skeleton_config = _config["skeleton"];
   const Json::Value& animations_config = _config["animations"];
 
@@ -367,8 +367,8 @@ bool ImportAnimations(const Json::Value& _config, OzzImporter* _importer,
   bool success = true;
 
   // Import skeleton instance.
-  unique_ptr<Skeleton> skeleton(
-      LoadSkeleton(skeleton_config["filename"].asCString()));
+  const char* key = from_mapping ? "clipped_file" : "filename";
+  unique_ptr<Skeleton> skeleton(LoadSkeleton(skeleton_config[key].asCString()));
   success &= skeleton.get() != nullptr;
 
   if (!success) {

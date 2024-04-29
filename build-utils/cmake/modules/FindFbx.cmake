@@ -118,7 +118,7 @@ function(FindFbxLibrariesGeneric _FBX_ROOT_DIR _OUT_FBX_LIBRARIES _OUT_FBX_LIBRA
   endif()
 
   # Set search path.
-  set(FBX_SEARCH_LIB_PATH "${_FBX_ROOT_DIR}lib/${FBX_CP_PATH}/${FBX_PROCESSOR_PATH}")
+  set(FBX_SEARCH_LIB_PATH "${_FBX_ROOT_DIR}lib/${FBX_PROCESSOR_PATH}")
 
   find_library(FBX_LIB
     ${FBX_SEARCH_LIB_NAMES}
