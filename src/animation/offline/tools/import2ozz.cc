@@ -32,6 +32,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 
 #include "animation/offline/tools/import2ozz_anim.h"
 #include "animation/offline/tools/import2ozz_config.h"

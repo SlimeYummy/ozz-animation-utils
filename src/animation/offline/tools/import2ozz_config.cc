@@ -371,6 +371,9 @@ bool SanitizeAnimation(Json::Value& _root, bool _all_options) {
               "Can be \"animation\" to use the 1st animation keyframe as "
               "reference, or \"skeleton\" to use skeleton rest pose.");
 
+  MakeDefault(_root, "fixed_root", "",
+              "Remove root motion in x/y/z axis (such as \"X\", \"xz\")");
+
   if (!AdditiveReference::IsValidEnumName(
           _root["additive_reference"].asCString())) {
     ozz::log::Err() << "Invalid additive reference pose \""
