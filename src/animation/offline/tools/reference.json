@@ -2,7 +2,9 @@
   //  Skeleton to import
   "skeleton" : 
   {
-    "filename" : "skeleton.ozz", //  Specifies skeleton input/output filename. The file will be outputted if import is true. It will also be used as an input reference during animations import.
+    "filename" : "skeleton.ozz", //  Specifies skeleton input/output filename. The file will be outputted if import is true. It will also be used as an input reference during animations import. Ignored when using "--mapping" argument.
+    "clipped_file" : "skeleton-clipped.ozz", //  Specifies skeleton input/output clipped filename when using "--mapping" arguments. See filename.
+    "renamed_file" : "skeleton-renamed.ozz", //  Specifies skeleton output renamed filename when using "--mapping" arguments. See filename.
     //  Define skeleton import settings.
     "import" : 
     {

@@ -31,6 +31,7 @@
 #include <cstddef>
 
 #include "ozz/base/containers/string.h"
+#include "ozz/base/maths/simd_math.h"
 #include "ozz/base/memory/unique_ptr.h"
 
 namespace ozz {
@@ -244,6 +245,15 @@ class Application {
   // Help message.
   ozz::string help_;
 };
+
+// Help function to dump ozz examples' results.
+inline void SaveMatrices(const char* file_name, const ozz::math::Float4x4* data,
+                         size_t size) {
+  FILE* file = fopen(file_name, "wb");
+  fwrite(data, sizeof(ozz::math::Float4x4), size, file);
+  fclose(file);
+}
+
 }  // namespace sample
 }  // namespace ozz
 #endif  // OZZ_SAMPLES_FRAMEWORK_APPLICATION_H_

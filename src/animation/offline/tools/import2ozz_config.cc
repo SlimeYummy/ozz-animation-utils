@@ -240,7 +240,14 @@ bool SanitizeSkeleton(Json::Value& _root, bool _all_options) {
   MakeDefault(_root, "filename", "skeleton.ozz",
               "Specifies skeleton input/output filename. The file will be "
               "outputted if import is true. It will also be used as an input "
-              "reference during animations import.");
+              "reference during animations import. Ignored when using "
+              "\"--mapping\" argument.");
+  MakeDefault(_root, "clipped_file", "skeleton-clipped.ozz",
+              "Specifies skeleton input/output clipped filename when using "
+              "\"--mapping\" arguments. See filename.");
+  MakeDefault(_root, "renamed_file", "skeleton-renamed.ozz",
+              "Specifies skeleton output renamed filename when using "
+              "\"--mapping\" arguments. See filename.");
   MakeDefaultObject(_root, "import", "Define skeleton import settings.");
   SanitizeSkeletonImport(_root["import"], _all_options);
   return true;
@@ -397,9 +404,9 @@ bool SanitizeTracks(Json::Value& _root, bool _all_options) {
 }
 
 bool SanitizeAnimation(Json::Value& _root, bool _all_options) {
-  MakeDefault(_root, "clip", "*",
+  MakeDefault(_root, "clip", ".*",
               "Specifies clip name (take) of the animation to import from the "
-              "source file. Wildcard characters \'*\' and \'?\' are supported");
+              "source file. Use C++ Regex (regex_match) to match animations.");
 
   MakeDefault(_root, "filename", "*.ozz",
               "Specifies animation output filename. Use a \'*\' character to "

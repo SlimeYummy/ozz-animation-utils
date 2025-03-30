@@ -31,6 +31,8 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <regex>
+#include <unordered_set>
 
 #include "animation/offline/tools/import2ozz_config.h"
 #include "animation/offline/tools/import2ozz_track.h"
@@ -335,7 +337,7 @@ AdditiveReference::EnumNames AdditiveReference::GetNames() {
 }
 
 bool ImportAnimations(const Json::Value& _config, OzzImporter* _importer,
-                      const ozz::Endianness _endianness) {
+                      const ozz::Endianness _endianness, bool from_mapping) {
   const Json::Value& skeleton_config = _config["skeleton"];
   const Json::Value& animations_config = _config["animations"];
 
@@ -360,8 +362,8 @@ bool ImportAnimations(const Json::Value& _config, OzzImporter* _importer,
   bool success = true;
 
   // Import skeleton instance.
-  unique_ptr<Skeleton> skeleton(
-      LoadSkeleton(skeleton_config["filename"].asCString()));
+  const char* key = from_mapping ? "clipped_file" : "filename";
+  unique_ptr<Skeleton> skeleton(LoadSkeleton(skeleton_config[key].asCString()));
   success &= skeleton.get() != nullptr;
 
   if (!success) {
@@ -370,6 +372,7 @@ bool ImportAnimations(const Json::Value& _config, OzzImporter* _importer,
 
   // Loop though all existing animations, and export those who match
   // configuration.
+  std::unordered_set<std::string> marks;
   for (auto& animation_config : animations_config) {
     const char* clip_match = animation_config["clip"].asCString();
 
@@ -379,13 +382,19 @@ bool ImportAnimations(const Json::Value& _config, OzzImporter* _importer,
                       << std::endl;
       continue;
     }
+    std::regex clip_regex(clip_match);
 
     size_t num_not_clip_animation = 0, num_valid_animation = 0;
     for (size_t j = 0; j < import_clip_names.size(); ++j) {
       const char* clip_name = import_clip_names[j].c_str();
-      if (!strmatch(clip_name, clip_match)) {
+      if (!std::regex_match(clip_name, clip_regex)) {
         continue;
       }
+      // Process every animation clip only once
+      if (marks.find(clip_name) != marks.end()) {
+        continue;
+      }
+      marks.insert(clip_name);
       ++num_not_clip_animation;
 
       // Animation
