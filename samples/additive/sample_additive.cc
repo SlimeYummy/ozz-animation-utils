@@ -71,6 +71,7 @@ class AdditiveBlendSampleApplication : public ozz::sample::Application {
     // For the sample purpose, animates additive weights automatically so the
     // hand moves.
     if (auto_animate_weights_) {
+      // AnimateWeights(0.7f);
       AnimateWeights(_dt);
     }
 
@@ -129,6 +130,9 @@ class AdditiveBlendSampleApplication : public ozz::sample::Application {
     if (!ltm_job.Run()) {
       return false;
     }
+
+    // ozz::sample::SaveMatrices("additive_cpp.bin", ltm_job.output.data(),
+    //                           ltm_job.output.size());
 
     return true;
   }

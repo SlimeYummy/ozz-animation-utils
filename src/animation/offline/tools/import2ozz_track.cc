@@ -335,7 +335,7 @@ bool ProcessImportTrack(OzzImporter& _importer, const char* _clip_name,
 
 namespace {
 ozz::animation::offline::MotionExtractor::Settings ProcessMotionTrackSettings(
-    const Json::Value& _config) {
+    const Json::Value& _config, bool _is_position) {
   ozz::animation::offline::MotionExtractor::Settings settings;
 
   const auto& components = _config["components"].asString();
@@ -353,13 +353,23 @@ ozz::animation::offline::MotionExtractor::Settings ProcessMotionTrackSettings(
   settings.bake = _config["bake"].asBool();
   settings.loop = _config["loop"].asBool();
 
+  if (_is_position) {
+    if (components.find('B') != ozz::string::npos) {
+      settings.y = false;
+      settings.bottom = true;
+    }
+    settings.bottom_threshold = _config["bottom_threshold"].asFloat();
+  }
+
   return settings;
 }
 }  // namespace
 
 bool ProcessMotionTrack(OzzImporter& _importer, const char* _clip_name,
                         const RawAnimation& _animation,
-                        const Skeleton& _skeleton, const Json::Value& _config,
+                        const Skeleton& _skeleton,
+                        const RawAnimation::JointTrack& _root_motion_track,
+                        const Json::Value& _config,
                         const ozz::Endianness _endianness,
                         RawAnimation* _baked_animation) {
   if (!_config["enable"].asBool()) {
@@ -374,43 +384,73 @@ bool ProcessMotionTrack(OzzImporter& _importer, const char* _clip_name,
     return false;
   }
 
-  // Configures motion extractor
-  ozz::animation::offline::MotionExtractor extractor;
-  extractor.position_settings = ProcessMotionTrackSettings(_config["position"]);
-  extractor.rotation_settings = ProcessMotionTrackSettings(_config["rotation"]);
+  ozz::animation::offline::RawFloat3Track raw_position;
+  ozz::animation::offline::RawQuaternionTrack raw_rotation;
 
-  // Find root joint
-  const char* joint_config = _config["joint_name"].asCString();
-  if (*joint_config != 0) {
-    bool found = false;
-    for (int i = 0; i < _skeleton.num_joints(); ++i) {
-      if (strmatch(_skeleton.joint_names()[i], joint_config)) {
-        found = true;
-        extractor.root_joint = i;
-        ozz::log::LogV() << "Found motion extraction root joint \""
-                         << joint_config << "\"" << std::endl;
-        break;
+  const char* root_motion_joint = _config["root_motion_joint"].asCString();
+
+  if (root_motion_joint != nullptr && root_motion_joint[0] != 0) {
+    // Prepare raw tracks
+    raw_position.name = "root-motion-position";
+    raw_rotation.name = "root-motion-rotation";
+
+    // Collect keyframe
+    for (const auto& tran : _root_motion_track.translations) {
+      raw_position.keyframes.push_back({
+          ozz::animation::offline::RawTrackInterpolation::kLinear,
+          tran.time / _animation.duration,
+          tran.value,
+      });
+    }
+
+    for (const auto& rot : _root_motion_track.rotations) {
+      raw_rotation.keyframes.push_back({
+          ozz::animation::offline::RawTrackInterpolation::kLinear,
+          rot.time / _animation.duration,
+          rot.value,
+      });
+    }
+
+  } else {
+    // Configures motion extractor
+    ozz::animation::offline::MotionExtractor extractor;
+    extractor.position_settings =
+        ProcessMotionTrackSettings(_config["position"], true);
+    extractor.rotation_settings =
+        ProcessMotionTrackSettings(_config["rotation"], false);
+
+    // Find root joint
+    const char* joint_config = _config["joint_name"].asCString();
+    if (*joint_config != 0) {
+      bool found = false;
+      for (int i = 0; i < _skeleton.num_joints(); ++i) {
+        if (strmatch(_skeleton.joint_names()[i], joint_config)) {
+          found = true;
+          extractor.root_joint = i;
+          ozz::log::LogV() << "Found motion extraction root joint \""
+                           << joint_config << "\"" << std::endl;
+          break;
+        }
+      }
+      if (!found) {
+        ozz::log::Err() << "Root joint \"" << joint_config
+                        << "\" not found in skeleton." << std::endl;
+        return false;
       }
     }
-    if (!found) {
-      ozz::log::Err() << "Root joint \"" << joint_config
-                      << "\" not found in skeleton." << std::endl;
+
+    // Prepare raw tracks
+    const ozz::string joint_name =
+        _skeleton.joint_names()[extractor.root_joint];
+    raw_position.name = joint_name + "-position";
+    raw_rotation.name = joint_name + "-rotation";
+
+    // Runs the extraction
+    if (!extractor(_animation, _skeleton, &raw_position, &raw_rotation,
+                   _baked_animation)) {
+      ozz::log::Err() << "Failed to extract motion track." << std::endl;
       return false;
     }
-  }
-
-  // Prepare raw tracks
-  const ozz::string joint_name = _skeleton.joint_names()[extractor.root_joint];
-  ozz::animation::offline::RawFloat3Track raw_position;
-  raw_position.name = joint_name + "-position";
-  ozz::animation::offline::RawQuaternionTrack raw_rotation;
-  raw_rotation.name = joint_name + "-rotation";
-
-  // Runs the extraction
-  if (!extractor(_animation, _skeleton, &raw_position, &raw_rotation,
-                 _baked_animation)) {
-    ozz::log::Err() << "Failed to extract motion track." << std::endl;
-    return false;
   }
 
   // Raw track to build and output.

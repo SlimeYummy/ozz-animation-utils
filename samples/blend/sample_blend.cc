@@ -106,6 +106,9 @@ class BlendSampleApplication : public ozz::sample::Application {
       layers[i].transform = make_span(samplers_[i].locals);
       layers[i].weight = samplers_[i].weight;
     }
+    // layers[0].weight = 0.6f;
+    // layers[1].weight = 0.4f;
+    // layers[2].weight = 0.0f;
 
     // Setups blending job.
     ozz::animation::BlendingJob blend_job;
@@ -132,6 +135,9 @@ class BlendSampleApplication : public ozz::sample::Application {
     if (!ltm_job.Run()) {
       return false;
     }
+
+    // ozz::sample::SaveMatrices("blend_cpp.bin", ltm_job.output.data(),
+    //                           ltm_job.output.size());
 
     return true;
   }

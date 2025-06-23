@@ -28,6 +28,8 @@
 #ifndef OZZ_OZZ_ANIMATION_OFFLINE_MOTION_EXTRACTOR_H_
 #define OZZ_OZZ_ANIMATION_OFFLINE_MOTION_EXTRACTOR_H_
 
+#include <cmath>
+
 #include "ozz/animation/offline/export.h"
 
 namespace ozz {
@@ -76,6 +78,8 @@ class OZZ_ANIMOFFLINE_DLL MotionExtractor {
     bool loop;  // Makes end transformation equal to begin to make animation
                 // loopable. Difference between end and begin is distributed all
                 // along animation duration.
+    bool bottom; // Use bottom instead of Y (position only)
+    float bottom_threshold;  // Bottom threshold
   };
 
   Settings position_settings = {true,
@@ -83,13 +87,17 @@ class OZZ_ANIMOFFLINE_DLL MotionExtractor {
                                 true,                  // X and Z projection
                                 Reference::kSkeleton,  // Reference
                                 true,    // Bake extracted position
-                                false};  // Don't loop position
+                                false,   // Don't loop position
+                                false,
+                                0.05f};
   Settings rotation_settings = {false,
                                 true,
                                 false,                 // Y / Yaw only
                                 Reference::kSkeleton,  // Reference
                                 true,    // Bake extracted rotation
-                                false};  // Don't loop rotation
+                                false,   // Don't loop position
+                                false,
+                                INFINITY};
 };
 }  // namespace offline
 }  // namespace animation

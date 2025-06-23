@@ -96,6 +96,7 @@ class PartialBlendSampleApplication : public ozz::sample::Application {
     for (size_t i = 0; i < kNumLayers; ++i) {
       layers[i].transform = make_span(samplers_[i].locals);
       layers[i].weight = samplers_[i].weight_setting;
+      // layers[i].weight = 0.5f;
 
       // Set per-joint weights for the partially blended layer.
       layers[i].joint_weights = make_span(samplers_[i].joint_weights);
@@ -126,6 +127,9 @@ class PartialBlendSampleApplication : public ozz::sample::Application {
     if (!ltm_job.Run()) {
       return false;
     }
+
+    // ozz::sample::SaveMatrices("partial_blend_cpp.bin", ltm_job.output.data(),
+    //                           ltm_job.output.size());
 
     return true;
   }
@@ -224,10 +228,13 @@ class PartialBlendSampleApplication : public ozz::sample::Application {
     // body weights. Note that they are stored in SoA format.
     WeightSetupIterator lower_it(&lower_body_sampler.joint_weights,
                                  lower_body_sampler.joint_weight_setting);
+    // WeightSetupIterator lower_it(&lower_body_sampler.joint_weights,
+    //                              0.5f);
     ozz::animation::IterateJointsDF(skeleton_, lower_it, upper_body_root_);
 
     WeightSetupIterator upper_it(&upper_body_sampler.joint_weights,
                                  upper_body_sampler.joint_weight_setting);
+    // WeightSetupIterator upper_it(&upper_body_sampler.joint_weights, 0.5f);
     ozz::animation::IterateJointsDF(skeleton_, upper_it, upper_body_root_);
   }
 

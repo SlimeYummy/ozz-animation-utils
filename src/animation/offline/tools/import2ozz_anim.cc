@@ -309,16 +309,18 @@ bool Export(OzzImporter& _importer, const RawAnimation& _input_animation,
                    << std::endl;
 
   return true;
-}  // namespace
+}
 
 bool ProcessAnimation(OzzImporter& _importer, const char* _clip_name,
                       const Skeleton& _skeleton, const Json::Value& _config,
-                      RawAnimation* _animation) {
+                      RawAnimation* _animation, const char* _root_motion_joint,
+                      RawAnimation::JointTrack* _root_motion_track) {
   ozz::log::Log() << "Extracting animation \"" << _clip_name << "\""
                   << std::endl;
 
   if (!_importer.Import(_clip_name, _skeleton,
-                        _config["sampling_rate"].asFloat(), _animation)) {
+                        _config["sampling_rate"].asFloat(), _animation,
+                        _root_motion_joint, _root_motion_track)) {
     ozz::log::Err() << "Failed to import animation \"" << _clip_name << "\""
                     << std::endl;
     return false;
@@ -399,8 +401,11 @@ bool ImportAnimations(const Json::Value& _config, OzzImporter* _importer,
 
       // Animation
       RawAnimation animation;
+      RawAnimation::JointTrack root_motion_track;
+      const char* root_motion_joint =
+          animation_config["tracks"]["motion"]["root_motion_joint"].asCString();
       if (ProcessAnimation(*_importer, clip_name, *skeleton, animation_config,
-                           &animation)) {
+                           &animation, root_motion_joint, &root_motion_track)) {
         ++num_valid_animation;
       }
 
@@ -417,9 +422,9 @@ bool ImportAnimations(const Json::Value& _config, OzzImporter* _importer,
       if (success) {
         RawAnimation baked_animation = animation;
         const Json::Value& motion = tracks_config["motion"];
-        success &=
-            ProcessMotionTrack(*_importer, clip_name, animation, *skeleton,
-                               motion, _endianness, &baked_animation);
+        success &= ProcessMotionTrack(*_importer, clip_name, animation,
+                                      *skeleton, root_motion_track, motion,
+                                      _endianness, &baked_animation);
         animation = std::move(baked_animation);
       }
 

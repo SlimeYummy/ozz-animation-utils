@@ -91,6 +91,7 @@ int PlaybackController::set_time_ratio(float _ratio) {
 
 // Gets animation current time.
 float PlaybackController::time_ratio() const { return time_ratio_; }
+// float PlaybackController::time_ratio() const { return 0.7f; }
 
 // Gets animation time of last update.
 float PlaybackController::previous_time_ratio() const {

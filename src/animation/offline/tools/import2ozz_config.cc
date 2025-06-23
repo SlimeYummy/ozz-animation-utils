@@ -322,16 +322,35 @@ bool SanitizeTrackImport(Json::Value& _root, bool _all_options) {
 }
 
 bool SanitizeTrackMotionComponent(Json::Value& _root,
-                                  const char* default_components, bool) {
-  MakeDefault(_root, "components", default_components,
-              "Components to import, can be any composition of x, y and z.");
-  if (_root["components"].asString().find_first_not_of("xyz") !=
-      std::string::npos) {
-    ozz::log::Err() << "Invalid value \"" << _root["components"].asString()
-                    << "\" for motion components. Components can be any "
-                       "composition of x, y and z."
-                    << std::endl;
-    return false;
+                                  const char* _default_components,
+                                  bool _all_options,
+                                  bool _is_position) {
+  _CRT_UNUSED(_all_options);
+  if (_is_position) {
+    MakeDefault(_root, "components", _default_components,
+                "Components to import, can be any composition of x, y, z and "
+                "B(buttom).");
+    std::string components = _root["components"].asString();
+    bool xyz = components.find_first_not_of("xyz") == std::string::npos;
+    bool xzb = components.find_first_not_of("xzB") == std::string::npos;
+    if (!xyz && !xzb) {
+      ozz::log::Err() << "Invalid value \"" << _root["components"].asString()
+                      << "\" for motion components. Components can be any "
+                         "composition of x, y and z."
+                      << std::endl;
+      return false;
+    }
+  } else {
+    MakeDefault(_root, "components", _default_components,
+                "Components to import, can be any composition of x, y and z.");
+    std::string components = _root["components"].asString();
+    if (components.find_first_not_of("xyz") != std::string::npos) {
+      ozz::log::Err() << "Invalid value \"" << _root["components"].asString()
+                      << "\" for motion components. Components can be any "
+                         "composition of x, y and z."
+                      << std::endl;
+      return false;
+    }
   }
 
   MakeDefault(
@@ -355,6 +374,11 @@ bool SanitizeTrackMotionComponent(Json::Value& _root,
   MakeDefault(_root, "optimize", true, "Activates keyframes optimization.");
   MakeDefault(_root, "optimization_tolerance", TrackOptimizer().tolerance,
               "Optimization tolerance for the optimized track");
+
+  if (_is_position) {
+    MakeDefault(_root, "bottom_threshold", 0.05f,
+                "Ignore buttom changes less than threshold.");
+  }
   return true;
 }
 
@@ -367,17 +391,22 @@ bool SanitizeTrackMotion(Json::Value& _root, bool _all_options) {
               "character to specify part(s) of the filename that should be "
               "replaced by the clip name.");
 
+  MakeDefault(_root, "root_motion_joint", "",
+              "Specify the joint that are dedicated to storing root motion data. "
+              "Setting this field will override \"joint_name\", \"components\", "
+              "and \"reference\".");
+
   MakeDefault(_root, "joint_name", "",
               "Name of the joint containing the motion to extract. Leave empty "
               "to select joint 0 (aka the first root).");
 
   MakeDefaultObject(_root, "position", "Root motion position settings.");
-  if (!SanitizeTrackMotionComponent(_root["position"], "xz", _all_options)) {
+  if (!SanitizeTrackMotionComponent(_root["position"], "xz", _all_options, true)) {
     return false;
   }
 
   MakeDefaultObject(_root, "rotation", "Root motion rotation settings.");
-  if (!SanitizeTrackMotionComponent(_root["rotation"], "y", _all_options)) {
+  if (!SanitizeTrackMotionComponent(_root["rotation"], "y", _all_options, false)) {
     return false;
   }
 

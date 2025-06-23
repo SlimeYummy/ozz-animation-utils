@@ -28,12 +28,19 @@
 #include "ozz/animation/offline/motion_extractor.h"
 
 #include <cassert>
+#include <queue>
 
+#include "ozz/animation/offline/animation_builder.h"
+#include "ozz/animation/offline/raw_animation_utils.h"
 #include "ozz/animation/offline/raw_animation.h"
 #include "ozz/animation/offline/raw_track.h"
 #include "ozz/animation/offline/raw_track_utils.h"
+#include "ozz/animation/runtime/animation.h"
+#include "ozz/animation/runtime/local_to_model_job.h"
+#include "ozz/animation/runtime/sampling_job.h"
 #include "ozz/animation/runtime/skeleton.h"
 #include "ozz/animation/runtime/skeleton_utils.h"
+#include "ozz/base/maths/soa_transform.h"
 #include "ozz/base/maths/transform.h"
 
 namespace ozz {
@@ -77,6 +84,120 @@ ozz::math::Transform BuildReference(
   }
   return ref;
 }
+
+struct ProcessHeightArgs {
+  int root_joint;
+  MotionExtractor::Reference reference;
+  float bottom_threshold;
+};
+
+bool ProcessHeight(const ProcessHeightArgs& _args, const Skeleton& _skeleton,
+                   const RawAnimation& _animation_in,
+                   RawAnimation* _animation_out,
+                   ozz::vector<float>* _heights_out) {
+  ozz::vector<ozz::math::Float4x4> models;
+  models.resize(_skeleton.num_joints());
+  ozz::vector<ozz::math::SoaTransform> locals;
+  locals.resize(_skeleton.num_soa_joints());
+  ozz::animation::SamplingJob::Context context;
+  context.Resize(_skeleton.num_joints());
+
+  float skeleton_bottom = 0;
+  if (_args.reference == MotionExtractor::Reference::kSkeleton) {
+    ozz::animation::LocalToModelJob stm_job;
+    stm_job.skeleton = &_skeleton;
+    stm_job.input = _skeleton.joint_rest_poses();
+    stm_job.output = make_span(models);
+    if (!stm_job.Run()) {
+      return false;
+    }
+    skeleton_bottom = INFINITY;
+    for each (ozz::math::Float4x4 mat in models) {
+      skeleton_bottom = fminf(skeleton_bottom, mat.cols[3].m128_f32[1]);
+    }
+  }
+
+  // Build temporary animation
+  AnimationBuilder builder;
+  unique_ptr<Animation> animation = builder(_animation_in);
+  if (!animation) {
+    return false;
+  }
+
+  // Collect time points (keep same with AnimationBuilder)
+  std::vector<float> times;
+  times.reserve(animation->timepoints().size());
+  auto insert_time = [&times](float time) {
+    auto it = std::lower_bound(times.begin(), times.end(), time);
+    if (it == times.end() || *it != time) {
+      times.insert(it, time);
+    }
+  };
+  for each (auto track in _animation_in.tracks) {
+    for each (auto t in track.translations) {
+      insert_time(t.time);
+    }
+    for each (auto r in track.rotations) {
+      insert_time(r.time);
+    }
+    for each (auto s in track.scales) {
+      insert_time(s.time);
+    }
+  }
+
+  _heights_out->reserve(times.size());
+  RawAnimation::JointTrack::Translations translations;
+  translations.reserve(times.size());
+
+  for (size_t i = 0; i < times.size(); ++i) {
+    float time = times[i];
+    float ratio = (time - times.front()) / times.back();
+
+    ozz::animation::SamplingJob sampling_job;
+    sampling_job.animation = &*animation;
+    sampling_job.context = &context;
+    sampling_job.ratio = ratio;
+    sampling_job.output = make_span(locals);
+    if (!sampling_job.Run()) {
+      return false;
+    }
+
+    ozz::animation::LocalToModelJob ltm_job;
+    ltm_job.skeleton = &_skeleton;
+    ltm_job.input = make_span(locals);
+    ltm_job.output = make_span(models);
+    if (!ltm_job.Run()) {
+      return false;
+    }
+
+    float bottom = INFINITY;
+    for each (auto mat in models) {
+      bottom = fminf(bottom, mat.cols[3].m128_f32[1]);
+    }
+    if (i == 0 && _args.reference == MotionExtractor::Reference::kAnimation) {
+      skeleton_bottom = bottom;
+    }
+
+    if (fabsf(bottom - skeleton_bottom) <= _args.bottom_threshold) {
+      _heights_out->push_back(0.0);
+    } else {
+      _heights_out->push_back(bottom - skeleton_bottom);
+    }
+
+    RawAnimation::TranslationKey key;
+    key.time = time;
+    int root_joint = _args.root_joint;
+    key.value = math::Float3(
+        locals[root_joint / 4].translation.x.m128_f32[root_joint % 4],
+        locals[root_joint / 4].translation.y.m128_f32[root_joint % 4],
+        locals[root_joint / 4].translation.z.m128_f32[root_joint % 4]);
+    translations.push_back(key);
+  }
+
+  *_animation_out = _animation_in;
+  _animation_out->tracks[0].translations = translations;
+  return true;
+}
 }  // namespace
 
 bool MotionExtractor::operator()(const RawAnimation& _input,
@@ -109,8 +230,21 @@ bool MotionExtractor::operator()(const RawAnimation& _input,
     return false;
   }
 
-  // Copy output animation
-  *_output = _input;
+  // Extract root motion
+  // -----------------------------------------------------------------------------
+
+  ozz::vector<float> heights;
+  if (position_settings.bottom) {
+    ProcessHeightArgs args;
+    args.root_joint = root_joint;
+    args.reference = position_settings.reference;
+    args.bottom_threshold = position_settings.bottom_threshold;
+    if (!ProcessHeight(args, _skeleton, _input, _output, &heights)) {
+      return false;
+    }
+  } else {
+    *_output = _input; // Copy output animation
+  }
 
   // Track to extract motion from
   const auto& input_track = _input.tracks[root_joint];
@@ -121,7 +255,7 @@ bool MotionExtractor::operator()(const RawAnimation& _input,
       BuildReference(position_settings.reference, rotation_settings.reference,
                      GetJointLocalRestPose(_skeleton, root_joint), input_track);
 
-  // Extract root motion
+  // Process root motion height first
   // -----------------------------------------------------------------------------
 
   // Copy function, used to copy aniamtion keyframes to motion keyframes.
@@ -140,11 +274,16 @@ bool MotionExtractor::operator()(const RawAnimation& _input,
                                    1.f * position_settings.y,
                                    1.f * position_settings.z};
   extract(
-      input_track.translations,
+      _output->tracks[root_joint].translations,
       [&mask = position_mask, &ref = ref.translation](const auto& _joint) {
         return (_joint - ref) * mask;
       },
       _motion_position->keyframes);
+  if (position_settings.bottom) {
+    for (size_t i = 0; i < heights.size(); ++i) {
+      _motion_position->keyframes[i].value.y = heights[i];
+    }
+  }
 
   // Copies root rotation, selecting only expecting decomposed rotation
   // components.
@@ -249,7 +388,6 @@ bool MotionExtractor::operator()(const RawAnimation& _input,
 
   return success;
 }
-
 }  // namespace offline
 }  // namespace animation
 }  // namespace ozz

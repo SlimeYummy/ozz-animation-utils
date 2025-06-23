@@ -665,7 +665,10 @@ class GltfImporter : public ozz::animation::offline::OzzImporter {
 
   bool Import(const char* _animation_name,
               const ozz::animation::Skeleton& skeleton, float _sampling_rate,
-              ozz::animation::offline::RawAnimation* _animation) override {
+              ozz::animation::offline::RawAnimation* _animation,
+              const char* _root_motion_joint,
+              ozz::animation::offline::RawAnimation::JointTrack*
+                  _root_motion_track) override {
     if (_sampling_rate == 0.0f) {
       _sampling_rate = 30.0f;
 
@@ -726,9 +729,11 @@ class GltfImporter : public ozz::animation::offline::OzzImporter {
     // For each joint get all its associated channels, sample them and record
     // the samples in the joint track
     const auto& joint_names = skeleton.joint_names();
-    for (int i = 0; i < num_joints; i++) {
-      auto& channels = channels_per_joint[joint_names[i]];
-      auto& track = _animation->tracks[i];
+
+    const auto FillTrack =
+        [&](const char* joint_name,
+            ozz::animation::offline::RawAnimation::JointTrack& track) {
+      auto& channels = channels_per_joint[joint_name];
 
       for (auto& channel : channels) {
         auto& sampler = gltf_animation->samplers[channel->sampler];
@@ -739,7 +744,7 @@ class GltfImporter : public ozz::animation::offline::OzzImporter {
         }
       }
 
-      const tinygltf::Node* node = FindNodeByName(joint_names[i]);
+      const tinygltf::Node* node = FindNodeByName(joint_name);
       assert(node != nullptr);
 
       // Pads the rest pose transform for any joints which do not have an
@@ -752,6 +757,18 @@ class GltfImporter : public ozz::animation::offline::OzzImporter {
       }
       if (track.scales.empty()) {
         track.scales.push_back(CreateScaleRestPoseKey(*node));
+      }
+      return true;
+    };
+
+    for (int i = 0; i < num_joints; i++) {
+      if (!FillTrack(joint_names[i], _animation->tracks[i])) {
+        return false;
+      }
+    }
+    if (_root_motion_joint != nullptr && _root_motion_joint[0] != 0) {
+      if (!FillTrack(_root_motion_joint, *_root_motion_track)) {
+        return false;
       }
     }
 

@@ -60,6 +60,7 @@ class MotionPlaybackSampleApplication : public ozz::sample::Application {
  protected:
   // Updates current animation time and skeleton pose.
   virtual bool OnUpdate(float _dt, float) {
+    // _dt = 1.2775653f;
     // Updates current animation time.
     //-------------------------------------------------------------------------
     int loops = controller_.Update(animation_, _dt);

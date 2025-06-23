@@ -99,7 +99,9 @@ class OZZ_ANIMTOOLS_DLL OzzImporter {
   // Returning false will report and error.
   virtual bool Import(const char* _animation_name,
                       const ozz::animation::Skeleton& _skeleton,
-                      float _sampling_rate, RawAnimation* _animation) = 0;
+                      float _sampling_rate, RawAnimation* _animation,
+                      const char* _root_motion_joint,
+                      RawAnimation::JointTrack* _root_motion_track) = 0;
 
   // Tracks / properties management.
 
