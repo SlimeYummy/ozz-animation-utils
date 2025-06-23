@@ -75,6 +75,9 @@ class PlaybackSampleApplication : public ozz::sample::Application {
       return false;
     }
 
+    // ozz::sample::SaveMatrices("playback_cpp.bin", ltm_job.output.data(),
+    //                           ltm_job.output.size());
+
     return true;
   }
 

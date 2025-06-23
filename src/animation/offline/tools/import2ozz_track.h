@@ -56,6 +56,7 @@ OZZ_ANIMTOOLS_DLL bool ProcessMotionTrack(OzzImporter& _importer,
                                           const char* _clip_name,
                                           const RawAnimation& _animation,
                                           const Skeleton& _skeleton,
+                                          const RawAnimation::JointTrack& _root_motion_track,
                                           const Json::Value& _config,
                                           const ozz::Endianness _endianness,
                                           RawAnimation* _baked_animation);
